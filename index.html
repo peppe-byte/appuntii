@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Appunti Orizzontali</title>
+
+  <!-- Icona app -->
+  <link rel="apple-touch-icon" href="icon.jpg">
+<link rel="icon" href="icon.jpg" type="image/jpeg">
+<link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Appunti">
+  <meta name="theme-color" content="#888888">
+
+  <style>
+    html, body{
+      margin:0;
+      padding:0;
+      height:100%;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bWVybmFsbHklMjBnbG9yZSUyMHNjZW5lfGVufDB8fDB8fA&w=1080') no-repeat center center fixed;
+      background-size: cover;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      padding:20px;
+      box-sizing:border-box;
+      overflow-x:auto;
+    }
+
+    .notes-app{
+      display:flex;
+      flex-direction:row;
+      gap:12px;
+      background: rgba(255,255,255,0.9);
+      border-radius:16px;
+      padding:16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      min-height:80vh;
+      align-items:flex-start;
+    }
+
+    .note{
+      padding:14px 16px;
+      border-radius:10px;
+      background: rgba(220,220,220,0.7);
+      min-width:350px;
+      min-height:150px;
+      cursor:text;
+      word-wrap: break-word;
+      overflow:hidden;
+      position: relative;
+      transition: background .15s;
+      flex-shrink:0;
+    }
+
+    .note img{
+      max-width:100%;
+      max-height:180px;
+      border-radius:8px;
+      display:block;
+      margin-top:6px;
+      object-fit: contain;
+    }
+
+    .add-btn{
+      padding:12px;
+      border-radius:12px;
+      border:none;
+      background: #888;
+      color:white;
+      font-size:16px;
+      cursor:pointer;
+      text-align:center;
+      flex-shrink:0;
+      min-width:150px;
+    }
+
+    @media (max-width:700px){
+      .note{ min-width:250px; min-height:130px; padding:10px; }
+      .add-btn{ font-size:14px; padding:10px; min-width:120px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="notes-app" id="notesApp">
+    <button class="add-btn" id="addBtn">Aggiungi appunto</button>
+  </div>
+
+  <script>
+    const notesApp = document.getElementById('notesApp');
+    const addBtn = document.getElementById('addBtn');
+    const STORAGE_KEY = 'appunti_mobile_horizontal_v3';
+
+    let notesData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+    function saveNotes(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(notesData.map(n=>({html: n.element.innerHTML}))));
+    }
+
+    function createNoteElement(noteObj){
+      const note = document.createElement('div');
+      note.className = 'note';
+      note.contentEditable = 'true';
+      note.innerHTML = noteObj.html || 'Scrivi qui il tuo appunto';
+      noteObj.element = note;
+
+      note.addEventListener('focus', function(){
+        if(note.innerText === 'Scrivi qui il tuo appunto') note.innerHTML = '';
+      });
+
+      note.addEventListener('input', saveNotes);
+
+      note.addEventListener('paste', function(e){
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        for(const item of items){
+          if(item.type.indexOf('image') !== -1){
+            const file = item.getAsFile();
+            const reader = new FileReader();
+            reader.onload = function(event){
+              const img = document.createElement('img');
+              img.src = event.target.result;
+              note.appendChild(img);
+              saveNotes();
+            };
+            reader.readAsDataURL(file);
+            e.preventDefault();
+          }
+        }
+      });
+
+      notesApp.appendChild(note);
+    }
+
+    function addNewNote(){
+      const noteObj = { html: '' };
+      notesData.push(noteObj);
+      createNoteElement(noteObj);
+      saveNotes();
+    }
+
+    notesData.forEach(n => createNoteElement(n));
+
+    addBtn.addEventListener('click', addNewNote);
+  </script>
+ <script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(() => console.log('Service Worker registrato'))
+      .catch(err => console.error('Service Worker fallito', err));
+  });
+}
+</script>
+</body>
+</html>

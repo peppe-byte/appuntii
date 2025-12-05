@@ -3,155 +3,206 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <title>Appunti Orizzontali</title>
-
-  <!-- Icona app -->
-  <link rel="apple-touch-icon" href="icon.jpg">
-<link rel="icon" href="icon.jpg" type="image/jpeg">
-<link rel="manifest" href="manifest.json">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Appunti">
-  <meta name="theme-color" content="#888888">
+  <title>Appunti Orizzontali Migliorati</title>
 
   <style>
-    html, body{
-      margin:0;
-      padding:0;
-      height:100%;
+    body {
+      margin: 0;
+      padding: 20px;
+      height: 100%;
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bWVybmFsbHklMjBnbG9yZSUyMHNjZW5lfGVufDB8fDB8fA&w=1080') no-repeat center center fixed;
-      background-size: cover;
-      display:flex;
-      justify-content:center;
-      align-items:flex-start;
-      padding:20px;
-      box-sizing:border-box;
-      overflow-x:auto;
+      background-color: #f9f7f1;
+      background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+      background-repeat: repeat;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      box-sizing: border-box;
+      flex-direction: column;
     }
 
-    .notes-app{
-      display:flex;
-      flex-direction:row;
-      gap:12px;
-      background: rgba(255,255,255,0.9);
-      border-radius:16px;
-      padding:16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-      min-height:80vh;
-      align-items:flex-start;
+    .app-container {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-items: center;
     }
 
-    .note{
-      padding:14px 16px;
-      border-radius:10px;
-      background: rgba(220,220,220,0.7);
-      min-width:350px;
-      min-height:150px;
-      cursor:text;
-      word-wrap: break-word;
-      overflow:hidden;
+    h1 {
+      font-size: 2rem;
+      color: #333333;
+      text-align: center;
+      margin: 0;
+    }
+
+    .cards-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .card {
+      flex: 1 1 300px;
+      min-height: 200px;
+      border-radius: 12px;
+      overflow: hidden;
       position: relative;
-      transition: background .15s;
-      flex-shrink:0;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
     }
 
-    .note img{
-      max-width:100%;
-      max-height:180px;
-      border-radius:8px;
-      display:block;
-      margin-top:6px;
-      object-fit: contain;
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
     }
 
-    .add-btn{
-      padding:12px;
-      border-radius:12px;
-      border:none;
-      background: #888;
-      color:white;
-      font-size:16px;
-      cursor:pointer;
-      text-align:center;
-      flex-shrink:0;
-      min-width:150px;
+    /* Sfondo immagini specifiche */
+    .card.appunti {
+      background: url('appunti.jpg') no-repeat center center;
+      background-size: cover;
     }
 
-    @media (max-width:700px){
-      .note{ min-width:250px; min-height:130px; padding:10px; }
-      .add-btn{ font-size:14px; padding:10px; min-width:120px; }
+    .card.idee {
+      background: url('idee.jpg') no-repeat center center;
+      background-size: cover;
+    }
+
+    .card.todo {
+      background: url('listacosedafare.jpg') no-repeat center center;
+      background-size: cover;
+    }
+
+    .card.altro {
+      background: url('altro.jpg') no-repeat center center;
+      background-size: cover;
+    }
+
+    /* Rettangolo trasparente con titolo */
+    .card-title-box {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.5);
+      text-align: left;
+      padding: 8px 12px;
+    }
+
+    .card-title-box span {
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+    }
+
+    /* Barra delle icone */
+    .icon-bar {
+      width: 90%;
+      max-width: 600px;
+      margin-top: 24px;
+      background: rgba(0,0,0,0.6);
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 12px 0;
+    }
+
+    .icon-bar svg {
+      width: 32px;
+      height: 32px;
+      fill: #ffffff;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+
+    .icon-bar svg:hover {
+      transform: scale(1.2);
+    }
+
+    /* Media query per tablet e mobile */
+    @media (max-width: 700px){
+      .card { flex: 1 1 250px; min-height: 150px; }
+      .card-title-box span { font-size: 1rem; }
+      .icon-bar svg { width: 28px; height: 28px; }
+    }
+
+    /* Media query per schermi molto stretti (verticale smartphone) */
+    @media (max-width: 500px){
+      .cards-row {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .card {
+        flex: 1 1 90%;
+        min-height: 150px;
+      }
+
+      .card-title-box span {
+        font-size: 1rem;
+      }
+
+      .icon-bar {
+        width: 90%;
+        padding: 10px 0;
+      }
+
+      .icon-bar svg {
+        width: 26px;
+        height: 26px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="notes-app" id="notesApp">
-    <button class="add-btn" id="addBtn">Aggiungi appunto</button>
+  <div class="app-container">
+    <h1>Appunti</h1>
+
+    <div class="cards-row">
+      <!-- I miei appunti -->
+      <div class="card appunti">
+        <div class="card-title-box"><span>I MIEI APPUNTI</span></div>
+      </div>
+
+      <!-- Idee -->
+      <div class="card idee">
+        <div class="card-title-box"><span>IDEE</span></div>
+      </div>
+
+      <!-- Lista cose da fare -->
+      <div class="card todo">
+        <div class="card-title-box"><span>LISTA COSE DA FARE</span></div>
+      </div>
+
+      <!-- Altro -->
+      <div class="card altro">
+        <div class="card-title-box"><span>ALTRO</span></div>
+      </div>
+    </div>
+
+    <!-- Barra icone -->
+    <div class="icon-bar">
+      <!-- Home -->
+      <svg viewBox="0 0 24 24">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+      <!-- Istruzioni -->
+      <svg viewBox="0 0 24 24">
+        <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-2h2zm0-4h-2V7h2z"/>
+      </svg>
+      <!-- Appunti -->
+      <svg viewBox="0 0 24 24">
+        <path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-1 14H6v-2h12zm0-4H6v-2h12zm0-4H6V7h12z"/>
+      </svg>
+      <!-- Impostazioni -->
+      <svg viewBox="0 0 24 24">
+        <path d="M19.43 12.98l1.77-1.03-1.43-2.48-1.77 1.03a6.94 6.94 0 0 0-1.46-.85l-.27-1.88h-2.84l-.27 1.88a6.94 6.94 0 0 0-1.46.85l-1.77-1.03-1.43 2.48 1.77 1.03a6.94 6.94 0 0 0 0 1.7l-1.77 1.03 1.43 2.48 1.77-1.03a6.94 6.94 0 0 0 1.46.85l.27 1.88h2.84l.27-1.88a6.94 6.94 0 0 0 1.46-.85l1.77 1.03 1.43-2.48-1.77-1.03a6.94 6.94 0 0 0 0-1.7zM12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5z"/>
+      </svg>
+    </div>
   </div>
-
-  <script>
-    const notesApp = document.getElementById('notesApp');
-    const addBtn = document.getElementById('addBtn');
-    const STORAGE_KEY = 'appunti_mobile_horizontal_v3';
-
-    let notesData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-
-    function saveNotes(){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(notesData.map(n=>({html: n.element.innerHTML}))));
-    }
-
-    function createNoteElement(noteObj){
-      const note = document.createElement('div');
-      note.className = 'note';
-      note.contentEditable = 'true';
-      note.innerHTML = noteObj.html || 'Scrivi qui il tuo appunto';
-      noteObj.element = note;
-
-      note.addEventListener('focus', function(){
-        if(note.innerText === 'Scrivi qui il tuo appunto') note.innerHTML = '';
-      });
-
-      note.addEventListener('input', saveNotes);
-
-      note.addEventListener('paste', function(e){
-        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
-        for(const item of items){
-          if(item.type.indexOf('image') !== -1){
-            const file = item.getAsFile();
-            const reader = new FileReader();
-            reader.onload = function(event){
-              const img = document.createElement('img');
-              img.src = event.target.result;
-              note.appendChild(img);
-              saveNotes();
-            };
-            reader.readAsDataURL(file);
-            e.preventDefault();
-          }
-        }
-      });
-
-      notesApp.appendChild(note);
-    }
-
-    function addNewNote(){
-      const noteObj = { html: '' };
-      notesData.push(noteObj);
-      createNoteElement(noteObj);
-      saveNotes();
-    }
-
-    notesData.forEach(n => createNoteElement(n));
-
-    addBtn.addEventListener('click', addNewNote);
-  </script>
- <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
-      .then(() => console.log('Service Worker registrato'))
-      .catch(err => console.error('Service Worker fallito', err));
-  });
-}
-</script>
 </body>
 </html>

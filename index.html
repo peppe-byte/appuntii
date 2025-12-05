@@ -8,15 +8,15 @@
   <style>
     body {
       margin: 0;
-      padding: 20px;
+      padding: 0;
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
       background-color: #f9f7f1;
       background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
       background-repeat: repeat;
       display: flex;
-      justify-content: flex-start;
-      align-items: center;
       flex-direction: column;
+      align-items: center;
+      min-height: 100vh; /* garantisce altezza minima su verticale */
     }
 
     .app-container {
@@ -26,6 +26,7 @@
       flex-direction: column;
       gap: 24px;
       align-items: center;
+      padding: 20px;
     }
 
     h1 {
@@ -38,8 +39,8 @@
     /* Griglia 2x2 per le card */
     .cards-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      grid-gap: 16px;
+      grid-template-columns: repeat(2, 1fr); /* due card per riga */
+      gap: 16px;
       width: 100%;
       justify-items: center;
     }
